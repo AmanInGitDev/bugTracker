@@ -1,0 +1,12 @@
+.sidebar-collapsed .nav-link span,
+.sidebar-collapsed h5 {
+  display: none;
+}
+
+.sidebar-collapsed .nav-link {
+  justify-content: center;
+}
+
+.sidebar-expanded {
+  min-width: 250px;
+}

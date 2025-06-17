@@ -1,0 +1,22 @@
+/* src/components/auth/Login.css */
+.auth-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.max-w-md {
+  max-width: 28rem;
+}
+
+.input-group-text {
+  background-color: white;
+  border-right: none;
+}
+
+.form-control {
+  border-left: none;
+}
+
+.form-control:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}

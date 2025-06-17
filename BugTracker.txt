@@ -1,0 +1,17 @@
+BugTracker
+
+1]Set up
+ -create directory named Bugtracker inside it create backend dir.
+ -in Bugtracker dir create a react application named frontend
+ 
+2]Backend setup
+ -do npm init
+ - npm i express cors helmet mongoose;
+ -go to mongodb account create new project named Bugtracker and while creating cluster remember dbname and password should not contain any special symbol and in access network add global address 0.0.0.0/0 so that u can access db from any ipaddress
+ - in index.js file require all the packeges which we have installed
+ -create .env file(this file is visible for ownwer only) ,in .env add db access link(from drivers in connect in clusters)
+ -start the server
+
+3]Frontend setup
+  -npm install firebase react-router-dom axios
+  -set up tailwind with react 

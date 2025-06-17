@@ -1,0 +1,20 @@
+Backend
+
+1]Express
+  -Express is a NodeJS framework used to handle routes, HTTP methods, and server in simple words express lets you write what your app should do behind the scenes
+  -const express=require("express")->it means we are telling to nodejs that I want to use express to build my server
+  -const app=express() ->we have created instance/object of the express application for handling all the request and response
+
+ * -app.use("/", (req, res) => { res.send("Server connected"); })
+      ->it is used to handle routes 
+      ->req->request obj->contain data bout request from the client
+      ->res->response obj->used to send response back to the client
+   *Remember->if we have to add multiple routes then add it before "/" root route , and if we put any route after "/" root route then it will never be executed 
+
+*Express is used to handle HTTP methods(are the actions which are send by browser to server) ->types of http method GET,POST,PUT,DELETE
+* GET->asking for information
+  POST->sending information(like login or signup data)
+  PUT->updating information
+  DELETE ->removing information
+
+
