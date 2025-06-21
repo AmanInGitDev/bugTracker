@@ -7,7 +7,14 @@ const helmet = require('helmet')
 const app = express() 
  
 // Middleware  
-app.use(cors())
+app.use(cors({
+  origin: [
+    'bug-tracker-pink.vercel.app',
+    'bug-tracker-git-main-amans-projects-0ca26ac6.vercel.app',
+    'bug-tracker-9a6194wyk-amans-projects-0ca26ac6.vercel.app',
+    'http://localhost:5173',
+  ]
+}))
 app.use(helmet())  
 app.use(express.json())   
   

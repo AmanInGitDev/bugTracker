@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebase/config';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaLock, FaEnvelope, FaGoogle, FaGithub, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaLock, FaEnvelope, FaGoogle, FaGithub, FaFacebook, FaEye, FaEyeSlash, FaTicketAlt } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 
@@ -59,154 +59,124 @@ const Signup = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card fade-in">
-        <div className="auth-header">
-          <h1>
-            {isRegistering ? 'Create Account' : 'Welcome Back'}
-          </h1>
-          <p>
-            {isRegistering ? 'Join us today and start tracking bugs efficiently!' : 'Sign in to continue to your dashboard'}
-          </p>
-        </div>
-        
-        <form onSubmit={handleAuth} className="mb-4">
-          {isRegistering && (
-            <div className="mb-3 input-group">
-              <span className="input-group-text">
-                <FaUser className="text-secondary" />
-              </span>
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={form.name}
-                onChange={handleChange}
-                className="form-control"
-                required
-              />
+    <div className="auth-page-wrapper">
+      <div className="auth-card-container">
+        {/* Left Branding Panel */}
+        <div className="auth-left-panel">
+          <div className="auth-left-content">
+            <div className="auth-logo">
+              <FaTicketAlt size={32} />
+              <h2>BugTracker</h2>
             </div>
-          )}
-          
-          <div className="mb-3 input-group">
-            <span className="input-group-text">
-              <FaEnvelope className="text-secondary" />
-            </span>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={form.email}
-              onChange={handleChange}
-              className="form-control"
-              required
-            />
+            <h1>WELCOME</h1>
+            <p className="headline">Streamline Your Workflow</p>
+            <p className="sub-headline">
+              Collaborate with your team, track issues efficiently, and deliver high-quality software faster. Get started in seconds.
+            </p>
           </div>
-          
-          <div className="mb-3 input-group">
-            <span className="input-group-text">
-              <FaLock className="text-secondary" />
-            </span>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              className="form-control"
-              required
-              minLength={6}
-            />
-            <button
-              type="button"
-              className="btn btn-outline-secondary"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{ borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </button>
-          </div>
-          
-          {!isRegistering && (
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <div className="form-check">
+        </div>
+
+        {/* Right Form Panel */}
+        <div className="auth-right-panel">
+          <div className="auth-card fade-in">
+            <div className="auth-header">
+              <h1>{isRegistering ? 'Create Account' : 'Sign In'}</h1>
+              <p>
+                {isRegistering ? 'Join us and start tracking bugs!' : 'Sign in to continue to your dashboard.'}
+              </p>
+            </div>
+            
+            <form onSubmit={handleAuth}>
+              {isRegistering && (
+                <div className="input-group-modern mb-3">
+                  <FaUser className="input-icon" />
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    value={form.name}
+                    onChange={handleChange}
+                    className="form-control-modern"
+                    required
+                  />
+                </div>
+              )}
+              
+              <div className="input-group-modern mb-3">
+                <FaEnvelope className="input-icon" />
                 <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="form-check-input"
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="form-control-modern"
+                  required
                 />
-                <label htmlFor="remember-me" className="form-check-label">
-                  Remember me
-                </label>
               </div>
-              <div>
-                <Link to="/reset-password" className="text-decoration-none text-primary">
-                  Forgot password?
-                </Link>
+              
+              <div className="input-group-modern mb-4">
+                <FaLock className="input-icon" />
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Password"
+                  value={form.password}
+                  onChange={handleChange}
+                  className="form-control-modern"
+                  required
+                  minLength={6}
+                />
+                <button
+                  type="button"
+                  className="btn-show-password"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? 'HIDE' : 'SHOW'}
+                </button>
               </div>
+              
+              {!isRegistering && (
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <div className="form-check">
+                    <input id="remember-me" name="remember-me" type="checkbox" className="form-check-input" />
+                    <label htmlFor="remember-me" className="form-check-label">Remember me</label>
+                  </div>
+                  <div>
+                    <Link to="/reset-password">Forgot password?</Link>
+                  </div>
+                </div>
+              )}
+              
+              {error && (
+                <div className="alert alert-danger mb-3 fade-in">
+                  <strong>Error:</strong> {error}
+                </div>
+              )}
+              
+              <button type="submit" disabled={isLoading} className="btn-submit w-100">
+                {isLoading ? 'Processing...' : (isRegistering ? 'Create Account' : 'Sign In')}
+              </button>
+
+              <div className="auth-divider my-4">
+                <span>Or</span>
+              </div>
+
+              <button type="button" className="btn-social-other w-100">
+                Sign in with other
+              </button>
+            </form>
+            
+            <div className="text-center mt-4">
+              <p className="text-secondary">
+                {isRegistering ? 'Already have an account?' : "Don't have an account?"}
+                <button onClick={() => setIsRegistering(!isRegistering)} className="btn btn-link">
+                  {isRegistering ? 'Sign In' : 'Sign Up'}
+                </button>
+              </p>
             </div>
-          )}
-          
-          {error && (
-            <div className="alert alert-danger mb-3 fade-in">
-              <strong>Error:</strong> {error}
-            </div>
-          )}
-          
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-100 btn btn-primary btn-lg ${isLoading ? 'disabled' : ''}`}
-          >
-            {isLoading ? (
-              <span className="d-flex align-items-center justify-content-center">
-                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                Processing...
-              </span>
-            ) : isRegistering ? (
-              'Create Account'
-            ) : (
-              'Sign In'
-            )}
-          </button>
-        </form>
-        
-        <div className="mb-4">
-          <div className="position-relative">
-            <div className="position-absolute top-50 start-0 end-0 border-top"></div>
-            <div className="position-relative text-center">
-              <span className="px-3 bg-white text-secondary">
-                Or continue with
-              </span>
-            </div>
-          </div>
-          
-          <div className="d-flex justify-content-between gap-3 mt-4">
-            <button className="btn btn-social btn-google flex-grow-1">
-              <FaGoogle />
-              <span className="d-none d-sm-inline">Google</span>
-            </button>
-            <button className="btn btn-social btn-github flex-grow-1">
-              <FaGithub />
-              <span className="d-none d-sm-inline">GitHub</span>
-            </button>
-            <button className="btn btn-social btn-facebook flex-grow-1">
-              <FaFacebook />
-              <span className="d-none d-sm-inline">Facebook</span>
-            </button>
           </div>
         </div>
-        
-        <p className="text-center text-secondary mb-0">
-          {isRegistering ? 'Already have an account?' : "Don't have an account?"}{' '}
-          <button
-            onClick={() => setIsRegistering(!isRegistering)}
-            className="btn btn-link p-0 text-decoration-none text-primary fw-semibold"
-          >
-            {isRegistering ? 'Sign in' : 'Sign up'}
-          </button>
-        </p>
       </div>
     </div>
   );

@@ -64,7 +64,7 @@ const CreateProject = () => {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5" style={{ background: '#f8fafc', minHeight: '100vh' }}>
       <Row className="justify-content-center">
         <Col md={8}>
           <div className="d-flex justify-content-between align-items-center mb-4">

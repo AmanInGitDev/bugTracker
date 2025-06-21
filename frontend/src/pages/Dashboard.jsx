@@ -124,7 +124,7 @@ const Dashboard = () => {
   return (
     <>
       <Navigation />
-      <Container fluid className="mt-4">
+      <Container fluid className="mt-4" style={{ background: '#f8fafc', minHeight: '100vh' }}>
         {/* Welcome Section */}
         <div className="mb-4">
           <h1 className="mb-2">Welcome back, {currentUser?.email?.split('@')[0] || 'Developer'}!</h1>
@@ -136,7 +136,7 @@ const Dashboard = () => {
         {/* Stats Cards */}
         <Row className="mb-4">
           <Col lg={3} md={6} className="mb-3">
-            <Card className="border-0 shadow-sm h-100">
+            <Card className="border-0 shadow-sm h-100" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center">
                   <div className="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
@@ -156,7 +156,7 @@ const Dashboard = () => {
           </Col>
           
           <Col lg={3} md={6} className="mb-3">
-            <Card className="border-0 shadow-sm h-100">
+            <Card className="border-0 shadow-sm h-100" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center">
                   <div className="bg-success bg-opacity-10 rounded-circle p-3 me-3">
@@ -176,7 +176,7 @@ const Dashboard = () => {
           </Col>
           
           <Col lg={3} md={6} className="mb-3">
-            <Card className="border-0 shadow-sm h-100">
+            <Card className="border-0 shadow-sm h-100" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center">
                   <div className="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
@@ -196,7 +196,7 @@ const Dashboard = () => {
           </Col>
           
           <Col lg={3} md={6} className="mb-3">
-            <Card className="border-0 shadow-sm h-100">
+            <Card className="border-0 shadow-sm h-100" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center">
                   <div className="bg-info bg-opacity-10 rounded-circle p-3 me-3">
@@ -219,8 +219,8 @@ const Dashboard = () => {
         <Row>
           {/* Recent Projects */}
           <Col lg={8} className="mb-4">
-            <Card className="border-0 shadow-sm">
-              <Card.Header className="bg-transparent border-bottom d-flex justify-content-between align-items-center">
+            <Card className="border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
+              <Card.Header className="bg-transparent border-bottom d-flex justify-content-between align-items-center" style={{ background: '#f1f5f9', color: '#1a202c' }}>
                 <h5 className="mb-0">Recent Projects</h5>
                 <Button 
                   variant="outline-primary" 
@@ -231,7 +231,7 @@ const Dashboard = () => {
                   View All
                 </Button>
               </Card.Header>
-              <Card.Body>
+              <Card.Body style={{ background: '#fff', color: '#1a202c' }}>
                 {recentProjects.length === 0 ? (
                   <div className="text-center py-4">
                     <FaTicketAlt size={48} className="text-muted mb-3" />
@@ -247,7 +247,7 @@ const Dashboard = () => {
                   </div>
                 ) : (
                   <div className="table-responsive">
-                    <table className="table table-hover mb-0">
+                    <table className="table table-hover mb-0" style={{ background: '#fff', color: '#1a202c' }}>
                       <thead>
                         <tr>
                           <th>Project</th>
@@ -315,11 +315,11 @@ const Dashboard = () => {
           <Col lg={4} className="mb-4">
             <Row>
               <Col className="mb-4">
-                <Card className="border-0 shadow-sm">
+                <Card className="border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
                   <Card.Header className="bg-transparent border-bottom">
                     <h6 className="mb-0">Quick Actions</h6>
                   </Card.Header>
-                  <Card.Body>
+                  <Card.Body style={{ background: '#fff', color: '#1a202c' }}>
                     <div className="d-grid gap-2">
                       <Button 
                         variant="primary"
@@ -350,11 +350,11 @@ const Dashboard = () => {
               </Col>
 
               <Col>
-                <Card className="border-0 shadow-sm">
+                <Card className="border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
                   <Card.Header className="bg-transparent border-bottom">
                     <h6 className="mb-0">Performance Metrics</h6>
                   </Card.Header>
-                  <Card.Body>
+                  <Card.Body style={{ background: '#fff', color: '#1a202c' }}>
                     <div className="mb-3">
                       <div className="d-flex justify-content-between mb-1">
                         <small>Ticket Resolution Rate</small>
@@ -397,14 +397,14 @@ const Dashboard = () => {
         {criticalProjects.length > 0 && (
           <Row className="mb-4">
             <Col>
-              <Card className="border-0 shadow-sm border-warning">
-                <Card.Header className="bg-warning bg-opacity-10 border-warning">
+              <Card className="border-0 shadow-sm border-warning" style={{ background: '#fff', color: '#1a202c' }}>
+                <Card.Header className="bg-warning bg-opacity-10 border-warning" style={{ background: '#f1f5f9', color: '#1a202c' }}>
                   <h6 className="mb-0 text-warning">
                     <FaExclamationTriangle className="me-2" />
                     Critical Issues Requiring Attention
                   </h6>
                 </Card.Header>
-                <Card.Body>
+                <Card.Body style={{ background: '#fff', color: '#1a202c' }}>
                   <Row>
                     {criticalProjects.map(project => (
                       <Col md={4} key={project._id} className="mb-3">

@@ -136,13 +136,16 @@ const Navigation = () => {
         width: sidebarOpen ? '250px' : '0',
         zIndex: 1000,
         transition: 'width 0.3s ease',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        background: '#fff',
+        color: '#1a202c',
+        borderRight: '1px solid #e2e8f0'
       }}>
         <div className="p-4" style={{ width: '250px' }}>
           {/* Sidebar Header */}
           <div className="d-flex align-items-center mb-4">
             <FaTicketAlt size={24} className="text-primary me-2" />
-            <h5 className="mb-0 text-white">BugTracker</h5>
+            <h5 className="mb-0" style={{ color: '#1a202c' }}>BugTracker</h5>
           </div>
 
           {/* Navigation Items */}
@@ -154,6 +157,7 @@ const Navigation = () => {
                 to={item.path}
                 className={`mb-2 ${isActive(item.path) ? 'active' : ''}`}
                 onClick={() => setSidebarOpen(false)}
+                style={{ color: isActive(item.path) ? '#fff' : '#1a202c', background: isActive(item.path) ? 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)' : 'transparent' }}
               >
                 {item.icon}
                 <span className="ms-3">{item.label}</span>
@@ -162,18 +166,18 @@ const Navigation = () => {
           </Nav>
 
           {/* Quick Stats */}
-          <div className="mt-5 p-3 bg-dark rounded">
-            <h6 className="text-white mb-3">Quick Stats</h6>
+          <div className="mt-5 p-3 bg-white rounded border">
+            <h6 className="mb-3" style={{ color: '#1a202c' }}>Quick Stats</h6>
             <div className="d-flex justify-content-between mb-2">
-              <span className="text-muted">Active Projects</span>
+              <span className="text-secondary">Active Projects</span>
               <Badge bg="primary">12</Badge>
             </div>
             <div className="d-flex justify-content-between mb-2">
-              <span className="text-muted">Open Tickets</span>
+              <span className="text-secondary">Open Tickets</span>
               <Badge bg="warning">34</Badge>
             </div>
             <div className="d-flex justify-content-between">
-              <span className="text-muted">Resolved</span>
+              <span className="text-secondary">Resolved</span>
               <Badge bg="success">156</Badge>
             </div>
           </div>

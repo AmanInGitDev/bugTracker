@@ -54,10 +54,9 @@ const statusVariant = {
 };
 
 const statusColumns = {
-  'open': 'To Do',
+  open: 'To Do',
   'in-progress': 'In Progress',
-  'resolved': 'Done',
-  'closed': 'Done'
+  resolved: 'Done',
 };
 
 const TicketList = () => {
@@ -175,9 +174,9 @@ const TicketList = () => {
   }
 
   const groupedTickets = {
-    'open': tickets.filter(ticket => ticket.status === 'open'),
-    'in-progress': tickets.filter(ticket => ticket.status === 'in-progress'),
-    'resolved': tickets.filter(ticket => ticket.status === 'resolved' || ticket.status === 'closed'),
+    open: tickets.filter((ticket) => ticket.status === 'open'),
+    'in-progress': tickets.filter((ticket) => ticket.status === 'in-progress'),
+    resolved: tickets.filter((ticket) => ticket.status === 'resolved'),
   };
 
   const getStatusIcon = (status) => {
@@ -197,7 +196,7 @@ const TicketList = () => {
   return (
     <>
       <Navigation />
-      <Container fluid className="mt-5">
+      <Container fluid className="mt-5" style={{ background: '#f8fafc', minHeight: '100vh' }}>
         {/* Header Section */}
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
@@ -228,7 +227,7 @@ const TicketList = () => {
         {/* Stats Row */}
         <Row className="mb-4">
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
@@ -243,7 +242,7 @@ const TicketList = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
@@ -258,7 +257,7 @@ const TicketList = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-info bg-opacity-10 rounded-circle p-3 me-3">
@@ -273,7 +272,7 @@ const TicketList = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-success bg-opacity-10 rounded-circle p-3 me-3">

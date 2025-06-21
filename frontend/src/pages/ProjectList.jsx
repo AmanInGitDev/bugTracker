@@ -110,7 +110,7 @@ const ProjectList = () => {
   return (
     <>
       <Navigation />
-      <Container fluid style={{ marginTop: '100px' }}>
+      <Container fluid style={{ marginTop: '100px', background: '#f8fafc', minHeight: '100vh' }}>
         {/* Header Section */}
         <div className="d-flex justify-content-between align-items-center mb-4">
           <div>
@@ -150,7 +150,7 @@ const ProjectList = () => {
         {/* Stats Cards */}
         <Row className="mb-4">
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
@@ -165,7 +165,7 @@ const ProjectList = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-success bg-opacity-10 rounded-circle p-3 me-3">
@@ -182,7 +182,7 @@ const ProjectList = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
@@ -199,7 +199,7 @@ const ProjectList = () => {
             </Card>
           </Col>
           <Col md={3}>
-            <Card className="text-center border-0 shadow-sm">
+            <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
               <Card.Body>
                 <div className="d-flex align-items-center justify-content-center mb-2">
                   <div className="bg-info bg-opacity-10 rounded-circle p-3 me-3">
@@ -218,7 +218,7 @@ const ProjectList = () => {
         </Row>
         
         {projects.length === 0 ? (
-          <Card className="text-center border-0 shadow-sm">
+          <Card className="text-center border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
             <Card.Body className="py-5">
               <div className="mb-4">
                 <FaTicketAlt size={64} className="text-muted mb-3" />
@@ -241,7 +241,7 @@ const ProjectList = () => {
           <Row>
             {projects.map(project => (
               <Col key={project._id} lg={4} md={6} className="mb-4">
-                <Card className="h-100 fade-in">
+                <Card className="h-100 fade-in" style={{ background: '#fff', color: '#1a202c' }}>
                   <Card.Header className="d-flex justify-content-between align-items-center">
                     <h6 className="mb-0 text-truncate">{project.title}</h6>
                     <Dropdown>
@@ -328,7 +328,7 @@ const ProjectList = () => {
             ))}
           </Row>
         ) : (
-          <Card className="border-0 shadow-sm">
+          <Card className="border-0 shadow-sm" style={{ background: '#fff', color: '#1a202c' }}>
             <Card.Body className="p-0">
               <div className="table-responsive">
                 <table className="table table-hover mb-0">
