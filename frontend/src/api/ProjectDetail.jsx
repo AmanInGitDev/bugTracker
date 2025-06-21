@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProject, updateProject, addTeamMember, removeTeamMember } from '../api/projectApi';
+import { getProjectById, updateProject, addTeamMember, removeTeamMember } from '../api/projectApi';
 import { Button, Card, ListGroup, Badge, Modal, Form } from 'react-bootstrap';
 import ProjectForm from '../components/ProjectForm';
+import { useAuth } from '../context/AuthContext';
 
 export default function ProjectDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const [project, setProject] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
@@ -20,7 +22,9 @@ export default function ProjectDetail() {
   const fetchProject = async () => {
     setLoading(true);
     try {
-      const data = await getProject(id);
+      if (!currentUser) return;
+      const token = await currentUser.getIdToken();
+      const data = await getProjectById(id, token);
       setProject(data);
     } catch (error) {
       console.error('Error fetching project:', error);
@@ -32,7 +36,8 @@ export default function ProjectDetail() {
 
   const handleUpdateProject = async (projectData) => {
     try {
-      const updatedProject = await updateProject(id, projectData);
+      const token = await currentUser.getIdToken();
+      const updatedProject = await updateProject(id, projectData, token);
       setProject(updatedProject);
       setEditing(false);
     } catch (error) {
@@ -42,7 +47,8 @@ export default function ProjectDetail() {
 
   const handleAddMember = async () => {
     try {
-      await addTeamMember(id, newMemberEmail);
+      const token = await currentUser.getIdToken();
+      await addTeamMember(id, newMemberEmail, token);
       fetchProject();
       setShowAddMemberModal(false);
       setNewMemberEmail('');
@@ -53,7 +59,8 @@ export default function ProjectDetail() {
 
   const handleRemoveMember = async (email) => {
     try {
-      await removeTeamMember(id, email);
+      const token = await currentUser.getIdToken();
+      await removeTeamMember(id, email, token);
       fetchProject();
     } catch (error) {
       console.error('Error removing team member:', error);
