@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { auth } from '../firebase/config';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaUser, FaLock, FaEnvelope, FaGoogle, FaGithub, FaFacebook } from 'react-icons/fa';
+import { FaUser, FaLock, FaEnvelope, FaGoogle, FaGithub, FaFacebook, FaEye, FaEyeSlash } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Login.css';
 
@@ -15,6 +15,7 @@ const Signup = () => {
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -32,7 +33,7 @@ const Signup = () => {
       } else {
         await signInWithEmailAndPassword(auth, form.email, form.password);
       }
-      navigate('/projectlist');
+      navigate('/dashboard');
     } catch (err) {
       setError(getFriendlyError(err.code));
     } finally {
@@ -58,14 +59,14 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-vh-100 d-flex align-items-center justify-content-center auth-container p-4">
-      <div className="bg-white p-5 rounded-3 shadow w-100 max-w-md border">
-        <div className="text-center mb-5">
-          <h1 className="h3 mb-3 fw-normal text-dark">
+    <div className="auth-container">
+      <div className="auth-card fade-in">
+        <div className="auth-header">
+          <h1>
             {isRegistering ? 'Create Account' : 'Welcome Back'}
           </h1>
-          <p className="text-secondary">
-            {isRegistering ? 'Join us today!' : 'Sign in to continue'}
+          <p>
+            {isRegistering ? 'Join us today and start tracking bugs efficiently!' : 'Sign in to continue to your dashboard'}
           </p>
         </div>
         
@@ -107,7 +108,7 @@ const Signup = () => {
               <FaLock className="text-secondary" />
             </span>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               placeholder="Password"
               value={form.password}
@@ -116,6 +117,14 @@ const Signup = () => {
               required
               minLength={6}
             />
+            <button
+              type="button"
+              className="btn btn-outline-secondary"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ borderLeft: 'none', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
           </div>
           
           {!isRegistering && (
@@ -132,7 +141,7 @@ const Signup = () => {
                 </label>
               </div>
               <div>
-                <Link to="/reset-password" className="text-decoration-none">
+                <Link to="/reset-password" className="text-decoration-none text-primary">
                   Forgot password?
                 </Link>
               </div>
@@ -140,8 +149,8 @@ const Signup = () => {
           )}
           
           {error && (
-            <div className="alert alert-danger mb-3">
-              {error}
+            <div className="alert alert-danger mb-3 fade-in">
+              <strong>Error:</strong> {error}
             </div>
           )}
           
@@ -156,7 +165,7 @@ const Signup = () => {
                 Processing...
               </span>
             ) : isRegistering ? (
-              'Sign Up'
+              'Create Account'
             ) : (
               'Sign In'
             )}
@@ -167,30 +176,33 @@ const Signup = () => {
           <div className="position-relative">
             <div className="position-absolute top-50 start-0 end-0 border-top"></div>
             <div className="position-relative text-center">
-              <span className="px-2 bg-white text-secondary">
+              <span className="px-3 bg-white text-secondary">
                 Or continue with
               </span>
             </div>
           </div>
           
           <div className="d-flex justify-content-between gap-3 mt-4">
-            <button className="btn btn-outline-secondary flex-grow-1">
-              <FaGoogle className="text-danger" />
+            <button className="btn btn-social btn-google flex-grow-1">
+              <FaGoogle />
+              <span className="d-none d-sm-inline">Google</span>
             </button>
-            <button className="btn btn-outline-secondary flex-grow-1">
-              <FaGithub className="text-dark" />
+            <button className="btn btn-social btn-github flex-grow-1">
+              <FaGithub />
+              <span className="d-none d-sm-inline">GitHub</span>
             </button>
-            <button className="btn btn-outline-secondary flex-grow-1">
-              <FaFacebook className="text-primary" />
+            <button className="btn btn-social btn-facebook flex-grow-1">
+              <FaFacebook />
+              <span className="d-none d-sm-inline">Facebook</span>
             </button>
           </div>
         </div>
         
-        <p className="text-center text-secondary">
+        <p className="text-center text-secondary mb-0">
           {isRegistering ? 'Already have an account?' : "Don't have an account?"}{' '}
           <button
             onClick={() => setIsRegistering(!isRegistering)}
-            className="btn btn-link p-0 text-decoration-none"
+            className="btn btn-link p-0 text-decoration-none text-primary fw-semibold"
           >
             {isRegistering ? 'Sign in' : 'Sign up'}
           </button>

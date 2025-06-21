@@ -2,27 +2,42 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getTicketsByProject, updateTicket } from '../../api/tickets';
 import { useAuth } from '../../context/AuthContext';
-import { Button, Card, Badge, Spinner, Container } from 'react-bootstrap';
+import { Button, Card, Badge, Spinner, Container, Row, Col, Alert } from 'react-bootstrap';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import { 
+  FaPlus, 
+  FaTicketAlt, 
+  FaExclamationTriangle, 
+  FaCheckCircle, 
+  FaClock,
+  FaUser,
+  FaCalendarAlt,
+  FaArrowLeft
+} from 'react-icons/fa';
+import Navigation from '../Navigation';
 
-// Styles for the columns
+// Enhanced column styles
 const columnStyles = {
   display: 'flex',
   flexDirection: 'column',
-  minHeight: '500px',
-  backgroundColor: '#f5f5f5',
-  borderRadius: '4px',
-  padding: '8px',
-  margin: '0 8px',
+  minHeight: '600px',
+  backgroundColor: 'var(--gray-50)',
+  borderRadius: 'var(--radius-lg)',
+  padding: 'var(--spacing-4)',
+  margin: '0 var(--spacing-2)',
   flex: 1,
+  border: '1px solid var(--gray-200)',
 };
 
 const ticketStyles = {
-  marginBottom: '8px',
-  padding: '8px',
+  marginBottom: 'var(--spacing-3)',
+  padding: 'var(--spacing-4)',
   backgroundColor: 'white',
-  borderRadius: '4px',
-  boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+  borderRadius: 'var(--radius-lg)',
+  boxShadow: 'var(--shadow-sm)',
+  border: '1px solid var(--gray-200)',
+  transition: 'var(--transition-normal)',
+  cursor: 'grab',
 };
 
 const priorityVariant = {
@@ -42,7 +57,7 @@ const statusColumns = {
   'open': 'To Do',
   'in-progress': 'In Progress',
   'resolved': 'Done',
-  'closed': 'Done' // You can adjust this based on your needs
+  'closed': 'Done'
 };
 
 const TicketList = () => {
@@ -78,7 +93,6 @@ const TicketList = () => {
 
     const { source, destination, draggableId } = result;
     
-    // Don't do anything if dropped in the same place
     if (
       source.droppableId === destination.droppableId &&
       source.index === destination.index
@@ -86,11 +100,9 @@ const TicketList = () => {
       return;
     }
 
-    // Find the ticket being dragged
     const ticketToUpdate = tickets.find(ticket => ticket._id === draggableId);
     if (!ticketToUpdate) return;
 
-    // Determine the new status based on the destination column
     let newStatus;
     switch (destination.droppableId) {
       case 'To Do':
@@ -100,13 +112,12 @@ const TicketList = () => {
         newStatus = 'in-progress';
         break;
       case 'Done':
-        newStatus = 'resolved'; // or 'closed' based on your preference
+        newStatus = 'resolved';
         break;
       default:
         newStatus = ticketToUpdate.status;
     }
 
-    // Optimistically update the UI
     const updatedTickets = tickets.map(ticket => {
       if (ticket._id === draggableId) {
         return { ...ticket, status: newStatus };
@@ -115,14 +126,12 @@ const TicketList = () => {
     });
     setTickets(updatedTickets);
 
-    // Update the ticket in the database
     try {
       setIsUpdating(true);
       const token = await currentUser.getIdToken();
       await updateTicket(ticketToUpdate._id, { status: newStatus }, token);
     } catch (err) {
       setError('Failed to update ticket status');
-      // Revert the UI if the update fails
       setTickets(tickets);
       console.error(err);
     } finally {
@@ -132,102 +141,256 @@ const TicketList = () => {
 
   if (loading) {
     return (
-      <div className="text-center mt-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </Spinner>
-      </div>
+      <>
+        <Navigation />
+        <Container className="mt-5 text-center">
+          <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+            <div className="text-center">
+              <Spinner animation="border" role="status" className="mb-3">
+                <span className="visually-hidden">Loading...</span>
+              </Spinner>
+              <h5 className="text-muted">Loading tickets...</h5>
+            </div>
+          </div>
+        </Container>
+      </>
     );
   }
 
   if (error) {
-    return <div className="alert alert-danger">{error}</div>;
+    return (
+      <>
+        <Navigation />
+        <Container className="mt-5">
+          <Alert variant="danger" className="fade-in">
+            <h5>Error Loading Tickets</h5>
+            <p>{error}</p>
+            <Button onClick={() => window.location.reload()} variant="outline-danger">
+              Try Again
+            </Button>
+          </Alert>
+        </Container>
+      </>
+    );
   }
 
-  // Group tickets by status for the columns
   const groupedTickets = {
     'open': tickets.filter(ticket => ticket.status === 'open'),
     'in-progress': tickets.filter(ticket => ticket.status === 'in-progress'),
     'resolved': tickets.filter(ticket => ticket.status === 'resolved' || ticket.status === 'closed'),
   };
 
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'open':
+        return <FaTicketAlt className="text-primary" />;
+      case 'in-progress':
+        return <FaClock className="text-warning" />;
+      case 'resolved':
+      case 'closed':
+        return <FaCheckCircle className="text-success" />;
+      default:
+        return <FaTicketAlt />;
+    }
+  };
+
   return (
-    <Container fluid>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Tickets</h2>
-        <Button variant="primary" onClick={() => navigate(`/projects/${projectId}/tickets/create`)}>
-          Create Ticket
-        </Button>
-      </div>
-
-      {isUpdating && (
-        <div className="text-center mb-3">
-          <Spinner animation="border" size="sm" />
-          <span className="ms-2">Updating ticket...</span>
-        </div>
-      )}
-
-      {tickets.length === 0 ? (
-        <Card>
-          <Card.Body className="text-center">
-            <Card.Text>No tickets found for this project.</Card.Text>
-          </Card.Body>
-        </Card>
-      ) : (
-        <DragDropContext onDragEnd={onDragEnd}>
-          <div style={{ display: 'flex', overflowX: 'auto', padding: '8px 0' }}>
-            {Object.entries(groupedTickets).map(([status, ticketsInColumn]) => (
-              <Droppable key={status} droppableId={statusColumns[status]}>
-                {(provided) => (
-                  <div
-                    ref={provided.innerRef}
-                    {...provided.droppableProps}
-                    style={{ ...columnStyles, minWidth: '300px' }}
-                  >
-                    <h5 className="text-center mb-3">{statusColumns[status]}</h5>
-                    {ticketsInColumn.map((ticket, index) => (
-                      <Draggable key={ticket._id} draggableId={ticket._id} index={index}>
-                        {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            style={{
-                              ...ticketStyles,
-                              ...provided.draggableProps.style,
-                              cursor: 'grab',
-                            }}
-                            onClick={() => navigate(`/projects/${projectId}/tickets/edit/${ticket._id}`)}
-                          >
-                            <div className="d-flex justify-content-between align-items-start">
-                              <div>
-                                <h6>{ticket.title}</h6>
-                                <p className="text-muted small mb-2">
-                                  {ticket.description.substring(0, 60)}...
-                                </p>
-                              </div>
-                              <Badge bg={priorityVariant[ticket.priority]}>
-                                {ticket.priority}
-                              </Badge>
-                            </div>
-                            {ticket.assignee && (
-                              <small className="text-muted">
-                                Assigned to: {ticket.assignee?.name || 'Unassigned'}
-                              </small>
-                            )}
-                          </div>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </div>
-                )}
-              </Droppable>
-            ))}
+    <>
+      <Navigation />
+      <Container fluid className="mt-5">
+        {/* Header Section */}
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <Button 
+              variant="outline-secondary" 
+              size="sm"
+              onClick={() => navigate('/projectlist')}
+              className="mb-2"
+            >
+              <FaArrowLeft className="me-2" />
+              Back to Projects
+            </Button>
+            <h1 className="mb-2">Project Tickets</h1>
+            <p className="mb-0">
+              Manage and track tickets for this project
+            </p>
           </div>
-        </DragDropContext>
-      )}
-    </Container>
+          <Button 
+            variant="primary" 
+            onClick={() => navigate(`/projects/${projectId}/tickets/create`)}
+            className="d-flex align-items-center"
+          >
+            <FaPlus className="me-2" />
+            Create Ticket
+          </Button>
+        </div>
+
+        {/* Stats Row */}
+        <Row className="mb-4">
+          <Col md={3}>
+            <Card className="text-center border-0 shadow-sm">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-center mb-2">
+                  <div className="bg-primary bg-opacity-10 rounded-circle p-3 me-3">
+                    <FaTicketAlt className="text-primary" size={20} />
+                  </div>
+                  <div>
+                    <h3 className="mb-0">{tickets.length}</h3>
+                    <small className="text-muted">Total Tickets</small>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={3}>
+            <Card className="text-center border-0 shadow-sm">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-center mb-2">
+                  <div className="bg-warning bg-opacity-10 rounded-circle p-3 me-3">
+                    <FaExclamationTriangle className="text-warning" size={20} />
+                  </div>
+                  <div>
+                    <h3 className="mb-0">{groupedTickets['open'].length}</h3>
+                    <small className="text-muted">Open</small>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={3}>
+            <Card className="text-center border-0 shadow-sm">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-center mb-2">
+                  <div className="bg-info bg-opacity-10 rounded-circle p-3 me-3">
+                    <FaClock className="text-info" size={20} />
+                  </div>
+                  <div>
+                    <h3 className="mb-0">{groupedTickets['in-progress'].length}</h3>
+                    <small className="text-muted">In Progress</small>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col md={3}>
+            <Card className="text-center border-0 shadow-sm">
+              <Card.Body>
+                <div className="d-flex align-items-center justify-content-center mb-2">
+                  <div className="bg-success bg-opacity-10 rounded-circle p-3 me-3">
+                    <FaCheckCircle className="text-success" size={20} />
+                  </div>
+                  <div>
+                    <h3 className="mb-0">{groupedTickets['resolved'].length}</h3>
+                    <small className="text-muted">Resolved</small>
+                  </div>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        {isUpdating && (
+          <Alert variant="info" className="fade-in mb-3">
+            <Spinner animation="border" size="sm" className="me-2" />
+            Updating ticket status...
+          </Alert>
+        )}
+
+        {tickets.length === 0 ? (
+          <Card className="border-0 shadow-sm">
+            <Card.Body className="text-center py-5">
+              <FaTicketAlt size={64} className="text-muted mb-3" />
+              <h4>No tickets found</h4>
+              <p className="text-muted">
+                Get started by creating your first ticket for this project.
+              </p>
+              <Button 
+                variant="primary"
+                onClick={() => navigate(`/projects/${projectId}/tickets/create`)}
+              >
+                <FaPlus className="me-2" />
+                Create Your First Ticket
+              </Button>
+            </Card.Body>
+          </Card>
+        ) : (
+          <DragDropContext onDragEnd={onDragEnd}>
+            <div style={{ display: 'flex', overflowX: 'auto', padding: 'var(--spacing-2) 0' }}>
+              {Object.entries(groupedTickets).map(([status, ticketsInColumn]) => (
+                <Droppable key={status} droppableId={statusColumns[status]}>
+                  {(provided) => (
+                    <div
+                      ref={provided.innerRef}
+                      {...provided.droppableProps}
+                      style={{ ...columnStyles, minWidth: '320px' }}
+                    >
+                      <div className="d-flex align-items-center justify-content-between mb-3">
+                        <h5 className="mb-0 d-flex align-items-center">
+                          {getStatusIcon(status)}
+                          <span className="ms-2">{statusColumns[status]}</span>
+                        </h5>
+                        <Badge bg={statusVariant[status]} className="rounded-pill">
+                          {ticketsInColumn.length}
+                        </Badge>
+                      </div>
+                      {ticketsInColumn.map((ticket, index) => (
+                        <Draggable key={ticket._id} draggableId={ticket._id} index={index}>
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              style={{
+                                ...ticketStyles,
+                                ...provided.draggableProps.style,
+                              }}
+                              onClick={() => navigate(`/projects/${projectId}/tickets/edit/${ticket._id}`)}
+                              className="ticket-card"
+                            >
+                              <div className="d-flex justify-content-between align-items-start mb-2">
+                                <h6 className="mb-1 text-truncate" style={{ maxWidth: '200px' }}>
+                                  {ticket.title}
+                                </h6>
+                                <Badge bg={priorityVariant[ticket.priority] || 'secondary'} size="sm">
+                                  {ticket.priority || 'medium'}
+                                </Badge>
+                              </div>
+                              <p className="text-muted small mb-3" style={{ 
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                overflow: 'hidden'
+                              }}>
+                                {ticket.description || 'No description'}
+                              </p>
+                              <div className="d-flex justify-content-between align-items-center">
+                                <div className="d-flex align-items-center">
+                                  <FaUser className="me-1" size={12} />
+                                  <small className="text-muted">
+                                    {ticket.assignedTo || 'Unassigned'}
+                                  </small>
+                                </div>
+                                <div className="d-flex align-items-center">
+                                  <FaCalendarAlt className="text-muted me-1" size={12} />
+                                  <small className="text-muted">
+                                    {new Date(ticket.createdAt).toLocaleDateString()}
+                                  </small>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </Draggable>
+                      ))}
+                      {provided.placeholder}
+                    </div>
+                  )}
+                </Droppable>
+              ))}
+            </div>
+          </DragDropContext>
+        )}
+      </Container>
+    </>
   );
 };
 
