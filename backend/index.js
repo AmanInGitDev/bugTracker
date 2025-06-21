@@ -9,9 +9,9 @@ const app = express()
 // Middleware  
 app.use(cors({
   origin: [
-    'bug-tracker-pink.vercel.app',
+      'bug-tracker-black.vercel.app',
     'bug-tracker-git-main-amans-projects-0ca26ac6.vercel.app',
-    'bug-tracker-9a6194wyk-amans-projects-0ca26ac6.vercel.app',
+    'bug-tracker-p1och2ea8-amans-projects-0ca26ac6.vercel.app',
     'http://localhost:5173',
   ]
 }))
